@@ -1,1 +1,3 @@
 Brackeys. (2019, October 27). First Person Movement in Unity - FPS Controller. YouTube. Retrieved May 7, 2022, from https://www.youtube.com/watch?v=_QajrabyTJc&amp;t=205s 
+
+YouTube. (2022, February 7). First person movement in 10 minutes - Unity Tutorial. YouTube. Retrieved May 7, 2022, from https://www.youtube.com/watch?v=f473C43s8nE&amp;t=195s 
