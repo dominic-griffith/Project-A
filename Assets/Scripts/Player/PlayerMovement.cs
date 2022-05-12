@@ -102,17 +102,18 @@ public class PlayerMovement : MonoBehaviour
 
         if (OnSlope() && !isExitingSlope)
         {
-            rb.AddForce(GetSlopeMoveDirection() * speed * 2, ForceMode.Force);
+            rb.AddForce(GetSlopeMoveDirection() * speed * 2f, ForceMode.Force);
             if(rb.velocity.y > 0)
             {
                 rb.AddForce(Vector3.down * 80f, ForceMode.Force);
+                //rb.AddForce(Vector3.down * (-10f + speed * 2 * Mathf.Sin(Vector3.Angle(Vector3.up, slopeHit.normal))), ForceMode.Force);
             }
         }   
         else if (isGrounded)
         {
             rb.AddForce(move.normalized * speed, ForceMode.Force);
         }       
-        else
+        else if(!isGrounded)
         {
             rb.AddForce(move.normalized * speed * airMultiplier, ForceMode.Force);
         }
@@ -194,7 +195,7 @@ public class PlayerMovement : MonoBehaviour
             speed = crouchSpeed;
         }
         //Sprinting
-        if(isGrounded && Input.GetButton("Sprint"))
+        else if(isGrounded && Input.GetButton("Sprint"))
         {
             movementState = MovementState.sprinting;
             speed = sprintSpeed;
