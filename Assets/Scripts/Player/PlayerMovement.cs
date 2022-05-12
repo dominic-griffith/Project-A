@@ -15,6 +15,7 @@ public class PlayerMovement : MonoBehaviour
     public float walkSpeed = 70;
     public float sprintSpeed = 100;
     public MovementState movementState;
+    Vector3 move;
     public float groundDrag = 5f;
 
     private float x;
@@ -39,6 +40,12 @@ public class PlayerMovement : MonoBehaviour
     private float startYScale;
 
 
+    [Header("Slopes")]
+    public float maxSlopeAngle = 45f;
+
+    private RaycastHit slopeHit;
+    private bool isExitingSlope;
+
 
     private void Start()
     {
@@ -59,7 +66,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        moveCharacter();
+        MoveCharacter();
     }
 
     private void PlayerInput()
@@ -89,13 +96,28 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private void moveCharacter()
+    private void MoveCharacter()
     {
-        Vector3 move = transform.right * x + transform.forward * z;
-        if (isGrounded)
+        move = transform.right * x + transform.forward * z;
+
+        if (OnSlope() && !isExitingSlope)
+        {
+            rb.AddForce(GetSlopeMoveDirection() * speed * 2, ForceMode.Force);
+            if(rb.velocity.y > 0)
+            {
+                rb.AddForce(Vector3.down * 80f, ForceMode.Force);
+            }
+        }   
+        else if (isGrounded)
+        {
             rb.AddForce(move.normalized * speed, ForceMode.Force);
+        }       
         else
+        {
             rb.AddForce(move.normalized * speed * airMultiplier, ForceMode.Force);
+        }
+            
+        rb.useGravity = !OnSlope();
     }
 
     private void ApplyDrag()
@@ -112,17 +134,30 @@ public class PlayerMovement : MonoBehaviour
 
     private void SpeedControl()
     {
-        Vector3 flatVelocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
-
-        if(flatVelocity.magnitude > speed)
+        if (OnSlope() && !isExitingSlope) //controls speed on slopes
         {
-            Vector3 limitedVelocity = flatVelocity.normalized * speed;
-            rb.velocity = new Vector3(limitedVelocity.x, rb.velocity.y, limitedVelocity.z);
+            if (rb.velocity.magnitude > speed)
+            {
+                rb.velocity = rb.velocity.normalized * speed;
+            }
         }
+        else //controls speed on flat ground
+        {
+            Vector3 flatVelocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+
+            if (flatVelocity.magnitude > speed)
+            {
+                Vector3 limitedVelocity = flatVelocity.normalized * speed;
+                rb.velocity = new Vector3(limitedVelocity.x, rb.velocity.y, limitedVelocity.z);
+            }
+        }
+
     }
 
     private void Jump()
     {
+        isExitingSlope = true;
+
         //ensures we jump the same height
         rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
 
@@ -132,6 +167,22 @@ public class PlayerMovement : MonoBehaviour
     private void ResetJump()
     {
         isJumping = false;
+        isExitingSlope = false;
+    }
+
+    private bool OnSlope() //check to see if player is on slope
+    {
+        if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerHeight * 0.5f + 0.3f))
+        {
+            float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
+            return angle < maxSlopeAngle && angle != 0;
+        }
+        return false;
+    }
+
+    private Vector3 GetSlopeMoveDirection()
+    {
+        return Vector3.ProjectOnPlane(move, slopeHit.normal).normalized;
     }
 
     private void StateHandler()
