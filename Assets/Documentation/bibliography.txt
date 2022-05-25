@@ -1,5 +1,8 @@
 Brackeys. (2019, October 27). First Person Movement in Unity - FPS Controller. YouTube. Retrieved May 7, 2022, from https://www.youtube.com/watch?v=_QajrabyTJc&amp;t=205s 
 
+Brackeys. (2017, April 19). Shooting with Raycasts - Unity tutorial. YouTube. Retrieved May 25, 2022, from https://www.youtube.com/watch?v=THnivyG0Mvo 
+
 Dave / GameDevelopment. (2022, February 7). First person movement in 10 minutes - Unity Tutorial. YouTube. Retrieved May 7, 2022, from https://www.youtube.com/watch?v=f473C43s8nE&amp;t=195s 
 
 Dave / GameDevelopment. (2022, February 15). SLOPE MOVEMENT, SPRINTING & CROUCHING - Unity Tutorial [Video]. YouTube. Retrieved May 11, 2022, from https://www.youtube.com/watch?v=xCxSjgYTw9c
+
