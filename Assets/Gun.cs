@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class Gun : MonoBehaviour
@@ -9,6 +10,7 @@ public class Gun : MonoBehaviour
     public Camera cam;
     public ParticleSystem muzzleFlash;
     public GameObject impactEffect;
+    public TrailRenderer bulletTrail;
 
     private void Update()
     {
@@ -23,8 +25,13 @@ public class Gun : MonoBehaviour
         muzzleFlash.Play();
 
         RaycastHit hit;
-        if(Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, range))
+        TrailRenderer trail = Instantiate(bulletTrail, muzzleFlash.transform.position, Quaternion.identity);
+
+        if (Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, range))
         {
+
+            StartCoroutine(StartTrail(trail, hit.point));
+
             Target target = hit.transform.GetComponent<Target>();
             if(target != null)
             {
@@ -39,6 +46,24 @@ public class Gun : MonoBehaviour
             GameObject impactGameObject = Instantiate(impactEffect, hit.point, Quaternion.LookRotation(hit.normal));
             Destroy(impactGameObject, 2f);
         }
+        else
+        {
+            StartCoroutine(StartTrail(trail, Vector3.Scale(cam.transform.forward, new Vector3(range, range, range)) + cam.transform.position));
+        }
 
+    }
+
+    private IEnumerator StartTrail(TrailRenderer trail, Vector3 hitPoint)
+    {
+        float time = 0;
+
+        while (time < 1)
+        {
+            trail.transform.position = Vector3.Lerp(muzzleFlash.transform.position, hitPoint, time);
+            time += Time.deltaTime / trail.time;
+
+            yield return null;
+        }
+        Destroy(trail.gameObject, trail.time);
     }
 }
