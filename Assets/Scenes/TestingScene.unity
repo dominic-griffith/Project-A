@@ -6767,7 +6767,7 @@ PrefabInstance:
     - target: {fileID: 4127734624656418792, guid: 81ff2ba5c5e004d07b3fa145597f6464, type: 3}
       propertyPath: impactEffect
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 5320143543191684110, guid: e20d0322760f4439bae7025a812bb4dd, type: 3}
     - target: {fileID: 4522196459520615327, guid: 81ff2ba5c5e004d07b3fa145597f6464, type: 3}
       propertyPath: m_RootOrder
       value: 0
